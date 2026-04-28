@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: "api-gateway"
+    static_configs:
+      - targets:
+          - "gateway1:3000"
+          - "gateway2:3000"
+          - "gateway3:3000"
