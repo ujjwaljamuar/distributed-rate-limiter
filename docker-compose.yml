@@ -1,0 +1,102 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: rate-limit-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  gateway1:
+    build: .
+    container_name: gateway1
+    environment:
+      PORT: 3000
+      HOST: 0.0.0.0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    ports:
+      - "3000:3000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  gateway2:
+    build: .
+    container_name: gateway2
+    environment:
+      PORT: 3000
+      HOST: 0.0.0.0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    ports:
+      - "3001:3000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  gateway3:
+    build: .
+    container_name: gateway3
+    environment:
+      PORT: 3000
+      HOST: 0.0.0.0
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    ports:
+      - "3002:3000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: rate-limit-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    depends_on:
+      - gateway1
+      - gateway2
+      - gateway3
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: rate-limit-grafana
+    ports:
+      - "3005:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+  k6:
+    image: grafana/k6:latest
+    container_name: rate-limit-k6
+    profiles:
+      - load-test
+    volumes:
+      - ./load-tests:/scripts:ro
+    depends_on:
+      - gateway1
+      - gateway2
+      - gateway3
+    command: run /scripts/multi-user.js
+
+volumes:
+  redis_data:
+  prometheus_data:
+  grafana_data:
