@@ -1,0 +1,15 @@
+export const BASE_URLS = [
+  "http://gateway1:3000",
+  "http://gateway2:3000",
+  "http://gateway3:3000",
+];
+
+export const ENDPOINT = "/users";
+
+export const TOKENS = [
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwidXNlcl9pZCI6InVzZXIxMjMifQ.61tV8g11vljstJwwkLftu8KCrJZuh38KA7KFgoHmrv8",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwidXNlcl9pZCI6InVzZXIxMjQifQ.ih0tm8BzN4MbQpmrhBrD9yIcsU8G_Z3nBtRXclFGy98",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwidXNlcl9pZCI6InVzZXIxMjUifQ.uDkyODItTc8AfWMe3S5uUs8YI8m0RbiFShLQfGoeKlw",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwidXNlcl9pZCI6InVzZXIxMjYifQ.4LugGAR-MLbtGclWxxDWATKCfoveqY-TWkxkr2B1kHo",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwidXNlcl9pZCI6InVzZXIxMjcifQ.Ue87VyY_8SVwWCBtcYSRctiQ77Nf11pYxxCgd4HrFZ0",
+];
