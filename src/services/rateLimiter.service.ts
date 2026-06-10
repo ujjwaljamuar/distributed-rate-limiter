@@ -1,11 +1,20 @@
 import fs from "fs";
 import path from "path";
 import redis from "./redisClient";
+import { rateLimitConfig } from "../config/rateLimit.config";
 
-const script = fs.readFileSync(
+const luaScriptPaths = [
   path.join(__dirname, "../lua/tokenBucket.lua"),
-  "utf8",
-);
+  path.join(process.cwd(), "src/lua/tokenBucket.lua"),
+];
+
+const scriptPath = luaScriptPaths.find((candidate) => fs.existsSync(candidate));
+
+if (!scriptPath) {
+  throw new Error("Unable to find Lua rate limiter script");
+}
+
+const script = fs.readFileSync(scriptPath, "utf8");
 
 let sha: string;
 
@@ -19,19 +28,20 @@ export const loadLuaScript = async () => {
   sha = loadedSha;
 };
 
-export const checkRateLimit = async (key: string) => {
-  const now = Math.floor(Date.now() / 1000);
+export const checkRateLimit = async (key: string, role: string) => {
+  const safeRole = role in rateLimitConfig ? role : "free";
 
-  const maxTokens = 10;
-  const refillRate = 1; // tokens per second
+  const config = rateLimitConfig[safeRole as keyof typeof rateLimitConfig];
+
+  const now = Math.floor(Date.now() / 1000);
 
   const result = await redis.evalsha(
     sha,
     2,
     `tokens:${key}`,
     `timestamp:${key}`,
-    maxTokens,
-    refillRate,
+    config.maxTokens,
+    config.refillRate,
     now,
   );
 

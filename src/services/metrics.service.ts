@@ -1,16 +1,17 @@
 import client from "prom-client";
 
-const collectDefaultMetrics = client.collectDefaultMetrics;
-collectDefaultMetrics();
+client.collectDefaultMetrics();
 
 export const requestCounter = new client.Counter({
   name: "http_requests_total",
-  help: "Total number of requests",
+  help: "Total requests",
+  labelNames: ["method", "endpoint", "status"],
 });
 
 export const rateLimitedCounter = new client.Counter({
   name: "rate_limited_total",
-  help: "Total number of rate-limited requests",
+  help: "Rate limited requests",
+  labelNames: ["endpoint", "role"],
 });
 
 export const requestDuration = new client.Histogram({

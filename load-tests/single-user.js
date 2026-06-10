@@ -1,12 +1,12 @@
 import http from "k6/http";
-import { BASE_URLS, ENDPOINT } from "./config.js";
+import { BASE_URLS, ENDPOINT, TOKENS } from "./config.js";
 import { sleep, check } from "k6";
 
 import { commonOptions } from "./options.js";
 
 export const options = commonOptions;
 
-const TOKEN = "TOKEN_USER_1";
+const TOKEN = TOKENS[0];
 
 export default function () {
   const url =

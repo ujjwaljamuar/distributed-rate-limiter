@@ -1,17 +1,17 @@
 import { Request, Response, NextFunction } from "express";
-import { requestCounter, requestDuration } from "../services/metrics.service";
+import { requestCounter } from "../services/metrics.service";
 
 export const metricsMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  requestCounter.inc();
-
-  const end = requestDuration.startTimer();
-
   res.on("finish", () => {
-    end();
+    requestCounter.inc({
+      method: req.method,
+      endpoint: req.path,
+      status: res.statusCode.toString(),
+    });
   });
 
   next();

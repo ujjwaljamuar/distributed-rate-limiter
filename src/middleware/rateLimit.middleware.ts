@@ -10,14 +10,20 @@ export const rateLimiter = async (
   next: NextFunction,
 ) => {
   const userId = req.user?.user_id;
+  const role = req.user?.role || "free";
 
-  const key = userId ? `user:${userId}` : `ip:${req.ip}`;
+  const endpoint = req.path;
+
+  const key = `user:${userId}:${endpoint}`;
 
   try {
-    const allowed = await checkRateLimit(key);
+    const allowed = await checkRateLimit(key, role);
 
     if (!allowed) {
-      rateLimitedCounter.inc();
+      rateLimitedCounter.inc({
+        endpoint: req.path,
+        role,
+      });
 
       return res.status(429).json({
         message: "Too many requests",
